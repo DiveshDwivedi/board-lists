@@ -3,14 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Board;
-use App\Models\CardList;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Card>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CardList>
  */
-class CardFactory extends Factory
+class CardListFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,11 +19,9 @@ class CardFactory extends Factory
     public function definition(): array
     {
         return [
-            'board_id' => Board::factory(),
             'user_id' => User::factory(),
-            'card_list_id' => CardList::factory(),
-            'title' => fake()->sentence,
-            'description' => fake()->sentence(3, true),
+            'board_id' => Board::factory(),
+            'name' => fake()->name,
         ];
     }
 }

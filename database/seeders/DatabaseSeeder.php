@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Board;
+use App\Models\Card;
+use App\Models\CardList;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,6 +25,20 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('1234'),
         ]);
 
-        Board::factory(10)->for($user)->create(); 
+        $Boards = Board::factory(10)->for($user)->create(); 
+
+        foreach ($Boards as $board) {
+            $card_lists = CardList::factory()->create([
+                'board_id' => $board->id,
+                'user_id' => $user->id,
+            ]);
+
+            Card::factory(50)->create([
+                'board_id' => $board->id,
+                'user_id' => $user->id,
+                'card_list_id' => $card_lists->id,
+            ]);
+
+        }
     }
 }

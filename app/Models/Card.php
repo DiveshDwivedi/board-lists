@@ -9,4 +9,10 @@ class Card extends Model
 {
     /** @use HasFactory<\Database\Factories\CardFactory> */
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function card_lists() {
+        return $this->belongsTo(CardList::class);
+    }
 }
