@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CardListController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,10 @@ Route::group(['middleware' => ['auth', 'verified'], 'controller' => BoardControl
     Route::get('/boards/{board}', 'show')->name('board');
     Route::post('/boards', 'store')->name('store');
     Route::put('/boards/{board}', 'update')->name('update');
+});
+
+Route::group(['controller' => CardListController::class], function(){
+    Route::post('boards/{board}/lists', 'store')->name('cardsList');
 });
 
 Route::middleware('auth')->group(function () {

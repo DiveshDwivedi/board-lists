@@ -1,6 +1,6 @@
 <script setup>
-import BoardName from "@/Components/BoardName.vue";
-import CreateBoardList from "@/Components/CreateBoardList.vue";
+import BoardName from "@/Pages/Boards/Components/BoardName.vue";
+import CreateBoardList from "@/Pages/Boards/Components/CreateCardList.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 
@@ -30,11 +30,13 @@ const props = defineProps({
       <div class="flex overflow-x-auto">
         <div class="inline-flex space-x-3 h-full items-start px-4 pb-4">
           <div
-            v-for="item in Array.from({ length: 0 })"
+            v-for="list in board.lists"
+            :key="list.id"
             class="w-72 bg-gray-200 max-h-full flex flex-col rounded-md"
           >
             <div class="flex items-center justify-between px-3 py-2">
-              <h3 class="text-sm font-semibold text-gray-700">Backlog</h3>
+              <h3 class="text-sm font-semibold text-gray-700">{{list.name
+              }}</h3>
 
               <Menu as="div" class="relative z-10">
                 <MenuButton

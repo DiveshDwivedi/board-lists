@@ -2,32 +2,41 @@
 import { useForm } from "@inertiajs/vue3";
 import { nextTick, ref } from "vue";
 
-defineProps({
+const props = defineProps({
   board: Object,
 });
 
 const isShow = ref(false);
 const inputFocus = ref();
+const formRef = ref();
 
 async function onClick() {
-    isShow.value = true;
+  isShow.value = true;
 
-    await nextTick();
-    inputFocus.value.focus();
+  await nextTick();
+  inputFocus.value.focus();
 }
 
 const form = useForm({
-    name: '',
+  name: "",
 });
 
 function submit() {
-    form.post(route('boardLists', {board: board.id}))
+  form.post(route("cardsList", { board: props.board.id }), {
+    onSuccess: () => {
+      form.reset();
+      formRef.value.scrollIntoView();
+    }
+  });
 }
-
 </script>
 
 <template>
-  <form @submit.prevent="submit()" v-if="isShow" class="p-3 bg-gray-200 rounded-md">
+  <form
+    ref="formRef"
+   @submit.prevent="submit()"
+  v-if="isShow" 
+  class="p-3 bg-gray-200 rounded-md">
     <input
       v-model="form.name"
       ref="inputFocus"
