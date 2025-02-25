@@ -2,19 +2,19 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import CreateCardListItem from "./CreateCardListItem.vue";
 import { ref } from "vue";
+import CardListItem from "./CardListItem.vue";
+
 defineProps({
-    list: Object,
+  list: Object,
 });
 const listRef = ref();
 
 function cardCreated() {
-    listRef.value.scrollTop = listRef.value.scrollHeight;
+  listRef.value.scrollTop = listRef.value.scrollHeight;
 }
 </script>
 <template>
-  <div
-    class="w-72 bg-gray-200 max-h-full flex flex-col rounded-md"
-  >
+  <div class="w-72 bg-gray-200 max-h-full flex flex-col rounded-md">
     <div class="flex items-center justify-between px-3 py-2">
       <h3 class="text-sm font-semibold text-gray-700">{{ list.name }}</h3>
 
@@ -61,19 +61,7 @@ function cardCreated() {
     <div class="px-3 pb-3 flex flex-col overflow-hidden">
       <div class="px-3 overflow-y-auto" ref="listRef">
         <ul class="space-y-3">
-          <li
-            v-for="card in list.cards"
-            :key="card.id"
-            class="group relative bg-white p-3 rounded-md border-b border-gray-300 hover:bg-gray-50"
-          >
-            <a href="#">{{ card.title }}</a>
-            <button
-              type="button"
-              class="hidden absolute top-1 right-1 w-8 h-8 font-bold bg-gray-50 group-hover:grid place-content-center rounded-md text-gray-600 hover:text-black hover:bg-gray-200"
-            >
-              ✎
-            </button>
-          </li>
+          <CardListItem v-for="card in list.cards" :key="card.id" :card="card" />
         </ul>
       </div>
       <div class="px-3 mt-2">

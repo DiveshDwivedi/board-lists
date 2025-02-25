@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class CardController extends Controller
 {
-    public function store() {
+    public function store()
+    {
         $validated = request()->validate([
             'title' => ['required', 'string', 'min:3', 'max:255'],
             'board_id' => ['required', 'exists:boards,id'],
@@ -18,6 +19,19 @@ class CardController extends Controller
         $validated['user_id'] = Auth::id();
 
         Card::create($validated);
+
+        return redirect()->back();
+    }
+
+    public function update(Card $card)
+    {
+        request()->validate([
+            'title' => ['required', 'string', 'min:3', 'max:255']
+        ]);
+
+        $card->update([
+            'title' => request('title'),
+        ]);
 
         return redirect()->back();
     }
