@@ -2,13 +2,13 @@
 import { useForm } from "@inertiajs/vue3";
 import { nextTick, ref } from "vue";
 
+const emit = defineEmits('created');
 const props = defineProps({
-  board: Object,
+  list: Object,
 });
 
 const isShow = ref(false);
 const inputFocus = ref();
-const formRef = ref();
 
 async function onClick() {
   isShow.value = true;
@@ -18,39 +18,43 @@ async function onClick() {
 }
 
 const form = useForm({
-  name: "",
+  title: "",
+  card_list_id: props.list.id,
+  board_id: props.list.board_id,
 });
 
 function submit() {
-  form.post(route("cardsList", { board: props.board.id }), {
+  form.post(route("cards.store"), {
     onSuccess: () => {
       form.reset();
-      formRef.value.scrollIntoView();
-    }
+      emit('created');
+    },
   });
 }
 </script>
 
 <template>
-  <form
-    @keydown.esc="isShow = false"
-    ref="formRef"
+  <form 
     @submit.prevent="submit()"
-  v-if="isShow" 
-  class="p-3 bg-gray-200 rounded-md">
-    <input
-      v-model="form.name"
+    v-if="isShow"
+    @keydown.esc="isShow = false"
+    >
+
+    <textarea
+      v-model="form.title"
       ref="inputFocus"
+      rows="3"
       class="block w-full text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring-blue-400"
-      type="text"
-      placeholder="Enter the list..."
-    />
+      placeholder="Enter the card title..."
+      @keydown.enter.prevent="submit()"
+    >
+    </textarea>
     <div class="mt-2 space-x-2">
       <button
         type="submit"
         class="px-4 py-2 text-sm font-medium text-white bg-rose-500 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 focus:outline-none"
       >
-        Add list
+        Add Card
       </button>
       <button
         type="button"
@@ -61,12 +65,13 @@ function submit() {
       </button>
     </div>
   </form>
+
   <button
     v-if="!isShow"
     @click="onClick()"
     type="button"
-    class="flex items-center text-sm font-medium bg-white/10 p-1 text-white hover:bg-white/20 rounded-md w-full"
+    class="flex items-center text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-300 p-1 rounded-md w-full"
   >
-    <span class="font-bold mr-1">+ </span>Add another list
+    <span class="font-bold mr-1">+ </span>Add Cards
   </button>
 </template>

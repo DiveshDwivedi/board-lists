@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CardListController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -16,15 +17,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::group(['middleware' => ['auth', 'verified'], 'controller' => BoardController::class], function(){
+Route::group(['middleware' => ['auth', 'verified'], 'controller' => BoardController::class], function () {
     Route::get('/boards', 'index')->name('boards');
     Route::get('/boards/{board}', 'show')->name('board');
     Route::post('/boards', 'store')->name('store');
     Route::put('/boards/{board}', 'update')->name('update');
 });
 
-Route::group(['controller' => CardListController::class], function(){
+Route::group(['controller' => CardListController::class], function () {
     Route::post('boards/{board}/lists', 'store')->name('cardsList');
+});
+
+Route::group(['controller' => CardController::class, 'prefix' => 'cards', 'as' => 'cards.'], function () {
+    Route::post('/', 'store')->name('store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -33,4 +38,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

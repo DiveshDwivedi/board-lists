@@ -1,8 +1,15 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import CreateCardListItem from "./CreateCardListItem.vue";
+import { ref } from "vue";
 defineProps({
     list: Object,
 });
+const listRef = ref();
+
+function cardCreated() {
+    listRef.value.scrollTop = listRef.value.scrollHeight;
+}
 </script>
 <template>
   <div
@@ -52,7 +59,7 @@ defineProps({
     </div>
 
     <div class="px-3 pb-3 flex flex-col overflow-hidden">
-      <div class="px-3 overflow-y-auto">
+      <div class="px-3 overflow-y-auto" ref="listRef">
         <ul class="space-y-3">
           <li
             v-for="card in list.cards"
@@ -70,12 +77,7 @@ defineProps({
         </ul>
       </div>
       <div class="px-3 mt-2">
-        <button
-          type="button"
-          class="flex items-center text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-300 p-1 rounded-md w-full"
-        >
-          <span class="font-bold mr-1">+ </span>Add Cards
-        </button>
+        <CreateCardListItem @created="cardCreated()" :list="list" />
       </div>
     </div>
   </div>
