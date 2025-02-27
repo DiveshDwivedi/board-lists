@@ -1,16 +1,47 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import CreateCardListItem from "./CreateCardListItem.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import CardListItem from "./CardListItem.vue";
+import Draggable from "vuedraggable";
+import { router } from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
   list: Object,
 });
 const listRef = ref();
+const cards = ref(props.list.cards);
 
+watch(() => props.list.cards, (newCards) => cards.value = newCards)
 function cardCreated() {
   listRef.value.scrollTop = listRef.value.scrollHeight;
+}
+
+function onChange(e) {
+  let item = e.moved || e.added;
+
+
+  if(!item) return;
+
+  let index = item.newIndex;
+  let prevCard = cards.value[index - 1];
+  let nextCard = cards.value[index + 1];
+  let card = cards.value[index];
+  
+  let position = card.position;
+
+  if (prevCard && nextCard) {
+    position = (prevCard.position + nextCard.position) / 2;
+  } else if (prevCard) {
+    position = prevCard.position + (prevCard.position / 2);
+  } else if (nextCard) {
+    position = nextCard.position / 2;
+  }
+
+  router.put(route("cards.move", {card: card.id}), {
+    position: position,
+    card_list_id: props.list.id,
+  }); 
 }
 </script>
 <template>
@@ -60,9 +91,21 @@ function cardCreated() {
 
     <div class="px-3 pb-3 flex flex-col overflow-hidden">
       <div class="px-3 overflow-y-auto" ref="listRef">
-        <ul class="space-y-3">
-          <CardListItem v-for="card in list.cards" :key="card.id" :card="card" />
-        </ul>
+
+        <Draggable
+          v-model="cards"
+          group="cards"
+          item-key="id"
+          class="space-y-3"
+          tag="ul"
+          drag-class="drag"
+          ghost-class="ghost"
+          @change="onChange"
+        >
+          <template #item="{ element }">
+            <CardListItem :card="element" />
+          </template>
+        </Draggable>
       </div>
       <div class="px-3 mt-2">
         <CreateCardListItem @created="cardCreated()" :list="list" />

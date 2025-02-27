@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CardController extends Controller
 {
@@ -32,6 +33,19 @@ class CardController extends Controller
         $card->update([
             'title' => request('title'),
         ]);
+
+        return redirect()->back();
+    }
+
+    public function move(Card $card) {
+        $validated = request()->validate([
+            'card_list_id' =>  ['required', 'exists:card_lists,id'],
+            'position' => ['required', 'numeric'],            
+        ]);
+
+        $validated['position'] = round($validated['position'], 5);
+
+        $card->update($validated);
 
         return redirect()->back();
     }

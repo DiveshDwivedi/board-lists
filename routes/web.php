@@ -31,6 +31,7 @@ Route::group(['controller' => CardListController::class], function () {
 Route::group(['controller' => CardController::class, 'prefix' => 'cards', 'as' => 'cards.'], function () {
     Route::post('/', 'store')->name('store');
     Route::put('/{card}', 'update')->name('update');
+    Route::put('/{card}/move', 'move')->name('move');
 });
 
 Route::middleware('auth')->group(function () {
