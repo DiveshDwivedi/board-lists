@@ -54,7 +54,7 @@ function submit() {
         </button>
         <button
           type="button"
-          @click="store.value.editingCardId = null"
+          @click="store.editingCardId = null"
           class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-black rounded-md focus:ring-2 focus:ring-rose-500 focus:outline-none"
         >
           Cancel
